@@ -17,8 +17,27 @@ npm i -D deepstreamio-server-client-plugin
 ## Usage
 
 ```js
-import clientPlugin from "deepstreamio-server-client-plugin"
+const server = /* create deepstream server */;
+import clientPlugin, { isServerAuth, isServer } from "deepstreamio-server-client-plugin"
 clientPlugin(server);
+server.set('permissionHandler', {
+	isValidUser: function(conn, auth, cb) {
+		if (isServerAuth(conn, auth, cb)) {
+			// Server authenticated
+			return;
+		}
+
+		// Handle client auth
+	},
+	canPerformAction: function(username, message, cb) {
+		if (isServer(username)) {
+			// Allow server full access
+			return cb(null, true);
+		}
+
+		// Handle client permissions
+	}
+});
 server.once('clientReady', () => {
 	// Use client
 });
