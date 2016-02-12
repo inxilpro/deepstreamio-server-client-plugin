@@ -32,4 +32,26 @@ export function isServer(clientUsername) {
 	return (clientUsername === token);
 }
 
+export function extendPermissionHandler(permissionHandler) {
+	return {
+		isValidUser: function(conn, auth, cb) {
+			if (isServerAuth(conn, auth, cb)) {
+				// Server authenticated
+				return;
+			}
+			return permissionHandler.isValidUser(conn, auth, cb);
+		},
+		canPerformAction: function(username, message, cb) {
+			if (isServer(username)) {
+				// Allow server full access
+				return cb(null, true);
+			}
+			return permissionHandler.canPerformAction(username, message, cb);
+		},
+		onClientDisconnect: function(username) {
+			return permissionHandler.onClientDisconnect(username);
+		}
+	};
+}
+
 export { token }

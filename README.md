@@ -18,26 +18,26 @@ npm i -D deepstreamio-server-client-plugin
 
 ```js
 const server = /* create deepstream server */;
-import clientPlugin, { isServerAuth, isServer } from "deepstreamio-server-client-plugin"
-clientPlugin(server);
-server.set('permissionHandler', {
-	isValidUser: function(conn, auth, cb) {
-		if (isServerAuth(conn, auth, cb)) {
-			// Server authenticated
-			return;
-		}
+import clientPlugin, { extendPermissionHandler } from "deepstreamio-server-client-plugin"
 
+// Attach to server
+const port = 6021; // Your server's TCP port
+const bytes = 64; // More bytes = more secure but slower
+clientPlugin(server, port, bytes);
+
+// extendPermissionHandler handles authenticating the server for you, and then
+// defers to your permissionHandler
+server.set('permissionHandler', extendPermissionHandler({
+	isValidUser: function(conn, auth, cb) {
 		// Handle client auth
 	},
 	canPerformAction: function(username, message, cb) {
-		if (isServer(username)) {
-			// Allow server full access
-			return cb(null, true);
-		}
-
 		// Handle client permissions
 	}
-});
+}));
+
+// Wait for "clientReady" before you try to use the client
+// "clientReady" won't fire until the server starts
 server.once('clientReady', () => {
 	// Use client
 });

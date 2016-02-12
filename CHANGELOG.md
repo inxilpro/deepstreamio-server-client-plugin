@@ -7,7 +7,11 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-### v0.2.0
+### v1.2.0
+
+ * Added `extendPermissionHandler`
+
+### v1.1.0
 
  * Fleshed out API and reworked internals
 
