@@ -1,6 +1,6 @@
 {
   "name": "deepstreamio-server-client-plugin",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A plugin to expose a deepstream client on the server",
   "main": "dist/index.js",
   "files": [
